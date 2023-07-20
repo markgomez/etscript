@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ -f /proc/1/sched ]] && [[ -z $(head -n 1 /proc/1/sched | grep -E '^init|^systemd') ]]; then
+  echo "Already inside a container."
+  exit 0
+fi
+
+if [[ $(uname -m) =~ ^aa?r.+64$ ]]; then
+  arch=arm64
+  dotnet_arch=arm64
+else
+  arch=amd64
+  dotnet_arch=x64
+fi
+
+workspace=$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null 2>&1 && pwd)
+dockerfile=Dockerfile
+docker_img=etscript/dev:latest
+color_red=$(tput setaf 1)
+color_cyan=$(tput setaf 6)
+style_bold=$(tput bold)
+style_default=$(tput sgr0)
+lf=$'\n'
+
+if ! which docker > /dev/null 2>&1; then
+    echo "${lf}${color_red}Error: could not find the 'docker' command.${style_default}${lf}"
+    exit 1
+fi
+
+if [[ ! -f $workspace/$dockerfile ]]; then
+  echo "${lf}${color_red}Error: could not find '$dockerfile'.${style_default}${lf}"
+  exit 1
+fi
+
+set +e
+docker image inspect $docker_img > /dev/null 2>&1
+if [[ $? -eq 1 ]]; then
+  set -e
+  echo "${lf}${color_cyan}${style_bold}Using '$dockerfile' to build an image...${style_default}${lf}"
+  docker buildx build \
+    --platform linux/$arch \
+    --build-arg dotnet_arch=$dotnet_arch \
+    -t $docker_img \
+    -f "$workspace/$dockerfile" \
+    "$workspace"
+fi
+set -e
+
+docker run -it --init --rm \
+  -u etscript:etscript \
+  --mount "type=bind,source=$workspace,target=/workspace" \
+  -w /workspace \
+  --cap-add SYS_PTRACE \
+  --security-opt seccomp=unconfined \
+  $docker_img

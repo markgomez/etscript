@@ -1,0 +1,6 @@
+# Ensure text files have their line endings normalized on checkin.
+* text=auto
+
+# Certain Windows-specific text files require CRLF to avoid unexpected behavior.
+*.bat text eol=crlf
+*.cmd text eol=crlf

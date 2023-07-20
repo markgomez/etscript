@@ -1,0 +1,19 @@
+# Build output
+bin
+obj
+publish
+
+# F# Make
+.fake
+
+# Visual Studio Code
+.vscode
+
+# Visual Studio
+.vs
+
+# JetBrains IDEs
+.idea
+
+# Miscellaneous
+.DS_Store

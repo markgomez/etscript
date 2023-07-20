@@ -1,0 +1,19 @@
+# Build output
+/target
+
+# Data
+*.db
+*.sqlite3
+
+# Visual Studio Code
+.vscode
+
+# Visual Studio
+.vs
+
+# JetBrains IDEs
+.idea
+
+# Miscellaneous
+.DS_Store
+*.ets

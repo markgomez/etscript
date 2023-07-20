@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "etscript-cli",
+    "etscript-core",
+]
+
+[profile.release]
+lto = true
+codegen-units = 1
