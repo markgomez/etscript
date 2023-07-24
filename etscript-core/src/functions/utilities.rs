@@ -2,6 +2,8 @@ use crate::functions::{self, ArgType};
 use crate::value::Value;
 use crate::vm::Vm;
 
+use regex::Regex;
+
 pub fn empty(arg_start: usize, arg_count: u8, vm: &mut Vm) -> Result<Value, Value> {
     const ARITY: u8 = 1;
     const ARG_TYPES: &[ArgType] = &[
@@ -45,6 +47,22 @@ pub fn iif(arg_start: usize, arg_count: u8, vm: &mut Vm) -> Result<Value, Value>
     };
 
     Ok(val.clone())
+}
+
+pub fn is_email_address(arg_start: usize, arg_count: u8, vm: &mut Vm) -> Result<Value, Value> {
+    const ARITY: u8 = 1;
+    const ARG_TYPES: &[ArgType] = &[
+        ArgType::String, // input
+                         // -> Boolean
+    ];
+    let stack = &vm.stack;
+    functions::check_arity(ARITY, arg_count)?;
+    functions::check_arg_types(ARG_TYPES, arg_start, vm)?;
+
+    let regex = Regex::new(r"^[^@\s]+@[^@\s]+\.[^@\s]+$").unwrap();
+    let input = stack[arg_start].to_string(vm);
+
+    Ok(Value::boolean(regex.is_match(input.as_str())))
 }
 
 pub fn is_null(arg_start: usize, arg_count: u8, vm: &mut Vm) -> Result<Value, Value> {

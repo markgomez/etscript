@@ -149,6 +149,7 @@ pub fn init(vm: &mut Vm) {
     // Utilities
     define_fn("empty", utilities::empty, vm);
     define_fn("iif", utilities::iif, vm);
+    define_fn("isemailaddress", utilities::is_email_address, vm);
     define_fn("isnull", utilities::is_null, vm);
     // `output` and `outputline` are handled at compile time
     define_fn("v", utilities::v, vm);

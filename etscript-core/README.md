@@ -78,6 +78,7 @@
 **Utilities**
 - [Empty](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/empty.html)
 - [Iif](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/iif.html)
+- [IsEmailAddress](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/isemailaddress.html)
 - [IsNull](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/isnull.html)
 - [Output](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/output.html)
 - [OutputLine](https://developer.salesforce.com/docs/marketing/marketing-cloud/guide/OutputLine.html)
