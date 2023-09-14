@@ -98,7 +98,9 @@ impl<'a> Table<'a> {
         ))?;
 
         let Some(cols): Option<String> = stmt.query_row([], |row| row.get(0))? else {
-            return Err(Value::error(format!("Table `{table}` was not found or is not configured.")));
+            return Err(Value::error(format!(
+                "Table `{table}` was not found or is not configured."
+            )));
         };
 
         Ok(cols)
@@ -155,7 +157,11 @@ impl<'a> Table<'a> {
 
         let col_data = self.col_data()?;
 
-        let Some(index) = col_data.0.iter().position(|&col| col.eq_ignore_ascii_case(name)) else {
+        let Some(index) = col_data
+            .0
+            .iter()
+            .position(|&col| col.eq_ignore_ascii_case(name))
+        else {
             return Err(Value::error(format!("No such column: {name}")));
         };
 
@@ -164,21 +170,34 @@ impl<'a> Table<'a> {
 }
 
 macro_rules! stringy_enum {
-    (enum $name:ident {
-        $($variant:ident),*,
+    ($vq:vis enum $name:ident {
+        $($variant:ident),*$(,)?
     }) => {
-        enum $name {
+        $vq enum $name {
             $($variant),*
         }
 
+        #[allow(unused)]
         impl $name {
-            fn as_str(&self) -> &'static str {
+            $vq fn as_str(&self) -> &'static str {
                 match self {
                     $($name::$variant => stringify!($variant)),*
                 }
             }
 
-            fn lower(&self) -> String {
+            $vq fn to_string(&self) -> String {
+                match self {
+                    $($name::$variant => self.as_str().to_owned()),*
+                }
+            }
+
+            $vq fn to_upper(&self) -> String {
+                match self {
+                    $($name::$variant => self.as_str().to_ascii_uppercase()),*
+                }
+            }
+
+            $vq fn to_lower(&self) -> String {
                 match self {
                     $($name::$variant => self.as_str().to_ascii_lowercase()),*
                 }
@@ -186,6 +205,7 @@ macro_rules! stringy_enum {
         }
     };
 }
+pub(crate) use stringy_enum;
 
 stringy_enum! {
     enum SqlType {
@@ -292,27 +312,27 @@ pub fn prep_stmt<'a>(
                     param_data.push(Box::new(NULL));
                 }
                 ValueType::Number(num_f64) => match col_type {
-                    t if t == SqlType::Boolean.lower() => match *num_f64 {
+                    t if t == SqlType::Boolean.to_lower() => match *num_f64 {
                         n if n == 1f64 => param_data.push(Box::new(true)),
                         n if n == 0f64 => param_data.push(Box::new(false)),
                         _ => err(col_name, col_type)?,
                     },
                     _ => {
-                        if !(col_type == SqlType::Integer.lower()
-                            || col_type == SqlType::Real.lower())
+                        if !(col_type == SqlType::Integer.to_lower()
+                            || col_type == SqlType::Real.to_lower())
                         {
                             err(col_name, col_type)?;
                         }
                         let mut num = *num_f64;
 
-                        if col_type == SqlType::Integer.lower() {
+                        if col_type == SqlType::Integer.to_lower() {
                             num = f64::trunc(*num_f64);
                         }
                         param_data.push(Box::new(num));
                     }
                 },
                 ValueType::Boolean(boolean) => {
-                    if col_type != SqlType::Boolean.lower() {
+                    if col_type != SqlType::Boolean.to_lower() {
                         err(col_name, col_type)?;
                     }
                     param_data.push(Box::new(*boolean));
@@ -321,12 +341,12 @@ pub fn prep_stmt<'a>(
                     ObjType::String(string_obj) => {
                         let string = string_obj.get(&vm.strings.borrow()).to_ascii_lowercase();
                         match col_type {
-                            t if t == SqlType::Boolean.lower() => match string.as_str() {
+                            t if t == SqlType::Boolean.to_lower() => match string.as_str() {
                                 truthy_pattern!() => param_data.push(Box::new(true)),
                                 falsey_pattern!() => param_data.push(Box::new(false)),
                                 _ => err(col_name, col_type)?,
                             },
-                            t if t == SqlType::DateTime.lower() => {
+                            t if t == SqlType::DateTime.to_lower() => {
                                 if !string_obj.is_datetime {
                                     err(col_name, col_type)?;
                                 } else {
@@ -334,7 +354,7 @@ pub fn prep_stmt<'a>(
                                 }
                             }
                             _ => {
-                                if col_type != SqlType::Text.lower() {
+                                if col_type != SqlType::Text.to_lower() {
                                     err(col_name, col_type)?;
                                 }
                                 param_data.push(Box::new(string));
