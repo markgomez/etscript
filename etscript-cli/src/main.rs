@@ -7,7 +7,7 @@ use std::{
 };
 
 fn repl() {
-    println!("ETscript 0.1.0 (press Control-C to quit)");
+    println!("ETscript 0.1.1 (press Control-C to quit)");
 
     loop {
         let mut line = String::new();

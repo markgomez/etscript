@@ -77,7 +77,7 @@ $ cargo run
 ```
 
 ```bash
-ETscript 0.1.0 (press Control-C to quit)
+ETscript 0.1.1 (press Control-C to quit)
 >>> %%=Add(2, 2)=%%
 4
 ```
