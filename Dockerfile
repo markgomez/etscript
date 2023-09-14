@@ -1,11 +1,11 @@
-FROM rust:1-bullseye
+FROM rust:1.72-bullseye
 
 ARG gid=1000
 ARG gname=etscript
 ARG uid=1000
 ARG uname=etscript
 
-ARG dotnet_version=8.0.100-preview.6
+ARG dotnet_version=8.0.100-rc.1
 ARG dotnet_arch=x64
 ARG dotnet_root=/opt/dotnet
 
