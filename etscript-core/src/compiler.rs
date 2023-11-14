@@ -74,6 +74,7 @@ struct Parser<'a> {
 
 impl<'a> Parser<'a> {
     #[rustfmt::skip]
+    #[allow(clippy::redundant_closure)]
     fn init_rules(r: &mut HashMap<u8, ParseRule>) {
 r.insert(TokenType::AttrDelim as u8,       ParseRule::default());
 r.insert(TokenType::FnDelimOpen as u8,     ParseRule::default());
