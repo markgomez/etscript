@@ -113,12 +113,8 @@ If you prefer not to use Docker, you'll need to install and set up the latest ve
 the following before running the `cargo` commands:
 
 - [Rust](https://www.rust-lang.org/tools/install)
-- [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0) (currently 
-in preview)
-
-Why version 8 and not 7? This project makes use of 
-[.NET native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot) and macOS 
-support wasn't added until then.
+- [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0) (required for 
+[Native AOT](https://learn.microsoft.com/dotnet/core/deploying/native-aot))
 
 ## Why is .NET being used in some parts?
 

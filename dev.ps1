@@ -25,7 +25,7 @@ if ($env:PROCESSOR_ARCHITECTURE -eq "ARM64") {
 
 $workspace = $PSScriptRoot
 $dockerfile = "Dockerfile"
-$dockerImg = "etscript/dev:r1.72-n8rc.1"
+$dockerImg = "etscript/dev:r1.73-n8.0"
 
 Set-Location $workspace
 
